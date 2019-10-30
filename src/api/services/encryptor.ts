@@ -10,17 +10,22 @@ export interface EncryptedData {
 }
 
 export default class Encryptor {
-  public EncryptJSON(key: string, data: any): EncryptedData {
-    const iv = crypto.randomBytes(IV_LENGTH);
-    const cipher = crypto.createCipheriv(CYPHER_ALGORITHM, Buffer.from(key), iv);
+  public EncryptJSON(key: string, data: any): EncryptedData | null {
+    try {
+      const iv = crypto.randomBytes(IV_LENGTH);
+      const cipher = crypto.createCipheriv(CYPHER_ALGORITHM, Buffer.from(key), iv);
 
-    let encrypted = cipher.update(JSON.stringify(data));
-    encrypted = Buffer.concat([encrypted, cipher.final()]);
+      let encrypted = cipher.update(JSON.stringify(data));
+      encrypted = Buffer.concat([encrypted, cipher.final()]);
 
-    return {
-      data: encrypted.toString('hex'),
-      iv: iv.toString('hex'),
-    };
+      return {
+        data: encrypted.toString('hex'),
+        iv: iv.toString('hex'),
+      };
+    } catch (e) {
+      console.log(e); // Would go to some logging software as well as Sentry or something like that
+      return null;
+    }
   }
 
   public DecryptJSON(key: string, iv: string, data: string): JSON | null {

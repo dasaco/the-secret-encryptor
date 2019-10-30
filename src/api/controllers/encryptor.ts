@@ -10,8 +10,20 @@ export const store = async (req: Request, res: Response): Promise<Response> => {
     return res.status(200).send([]);
   }
 
+  if (!id || id.trim() === '') {
+    return res.status(400).send('No id provided');
+  }
+
+  if (!value) {
+    return res.status(400).send('No data provided');
+  }
+
   try {
     const encryptedData = new Encryptor().EncryptJSON(encryptionKey, value);
+
+    if (!encryptedData) {
+      return res.status(500).send('Error');
+    }
 
     let newDataItem = new DataItem();
     newDataItem.data = encryptedData.data;
@@ -24,7 +36,10 @@ export const store = async (req: Request, res: Response): Promise<Response> => {
 
     return res.status(200).send(newDataItem);
   } catch (e) {
-    console.log(e);
+    if (e.message && e.message.includes('duplicate key')) {
+      return res.status(409).send('ID is not available');
+    }
+
     return res.status(500).send('Error');
   }
 };
@@ -34,6 +49,10 @@ export const retrieve = async (req: Request, res: Response): Promise<Response> =
 
   if (!decryptionKey || decryptionKey.length !== KEY_LENGTH) {
     return res.status(400).send('Invalid key');
+  }
+
+  if (!id || id.trim() === '') {
+    return res.status(400).send('No id provided');
   }
 
   try {

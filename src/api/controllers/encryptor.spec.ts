@@ -38,6 +38,10 @@ describe('Requests', () => {
     chai
       .request(app)
       .post('/retrieve')
+      .send({
+        decryption_key: 'wrong_key',
+        id,
+      })
       .end((err, res) => {
         res.should.have.status(200);
         res.body.should.equal([]);
