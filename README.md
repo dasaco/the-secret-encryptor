@@ -1,6 +1,6 @@
 # The Secret Encryptor
 
-Installation:
+How to run:
 
 1. Add .env file
 
