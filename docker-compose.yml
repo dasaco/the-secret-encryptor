@@ -1,0 +1,32 @@
+version: "3"
+
+services:
+  web:
+    image: web:latest
+    build:
+      context: .
+      dockerfile: Dockerfile
+    working_dir: /app
+    env_file:
+      - .env
+    ports:
+      - "3000:3000"
+    depends_on:
+      - db
+    volumes:
+      - .:/app
+    command: npm run start
+  
+  db:
+    image: postgres:${POSTGRES_IMAGE_VERSION}
+    environment:
+      - POSTGRES_USER=${DB_USER}
+      - POSTGRES_PASSWORD=${DB_PASSWORD}
+      - PGDATA=/pgdata
+      - POSTGRES_DB=${DB_NAME}
+    env_file:
+      - .env
+    ports:
+      - "7770:5432"
+    volumes:
+      - ./postgres-data:/var/lib/postgresql
