@@ -46,7 +46,7 @@ export const retrieve = async (req: Request, res: Response): Promise<Response> =
       return res.status(200).send([]);
     }
 
-    const result = data.map((d): JSON => new Encryptor().DecryptJSON(decryptionKey, d.iv, d.data));
+    const result = data.map((d): JSON => new Encryptor().DecryptJSON(decryptionKey, d.iv, d.data)).filter(i => i);
 
     return res.status(200).send(result);
   } catch (e) {

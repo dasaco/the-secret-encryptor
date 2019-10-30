@@ -1,37 +1,32 @@
-import { Express, Request, Response, NextFunction } from "express";
-import express = require("express");
-import { createConnection } from "typeorm";
-import HttpRequestError from "./api/classes/HttpRequestError";
-import routes from "./api/config/routes";
+import { Express, Request, Response, NextFunction } from 'express';
+import express = require('express');
+import { createConnection } from 'typeorm';
+import HttpRequestError from './api/classes/HttpRequestError';
+import routes from './api/config/routes';
+
+let app: Express;
 
 createConnection()
   .then(async connection => {
-    const app: Express = express();
+    app = express();
 
     app.use(express.urlencoded());
     app.use(express.json());
 
     routes(app);
 
-    app.use(
-      (
-        error: HttpRequestError,
-        req: Request,
-        res: Response,
-        next: NextFunction
-      ) => {
-        res.status(error.status || 500);
-        res.json({
-          error: {
-            message: error.message
-          }
-        });
-      }
-    );
+    app.use((error: HttpRequestError, req: Request, res: Response, next: NextFunction) => {
+      res.status(error.status || 500);
+      res.json({
+        error: {
+          message: error.message,
+        },
+      });
+    });
 
-    app.get("*", (req, res) => {
+    app.get('*', (req, res) => {
       res.status(404).json({
-        error: "404"
+        error: '404',
       });
     });
 
@@ -43,4 +38,6 @@ createConnection()
       return console.log(`server is listening on ${port}`);
     });
   })
-  .catch(error => console.log("TypeORM Error: ", error));
+  .catch(error => console.log('TypeORM Error: ', error));
+
+export default app;
