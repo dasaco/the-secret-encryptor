@@ -1,7 +1,7 @@
 {
   "compilerOptions": {
     "lib": ["es6"],
-    "types": ["node"],  
+    "types": ["node"],
     "experimentalDecorators": true,
     "module": "commonjs",
     "esModuleInterop": true,

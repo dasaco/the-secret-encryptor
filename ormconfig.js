@@ -1,9 +1,9 @@
-const dotenv = require("dotenv");
+const dotenv = require('dotenv');
 
 dotenv.config();
 
 const config = {
-  type: "postgres",
+  type: 'postgres',
   host: process.env.DB_HOST,
   username: process.env.DB_USER,
   password: process.env.DB_PASSWORD,
@@ -11,9 +11,10 @@ const config = {
   port: process.env.DB_PORT,
   synchronize: true,
   logging: false,
+  entities: ['dist/db/entities/**/*.js'],
   cli: {
-    migrationsDir: "src/db/migration/**/*.ts",
-    entitiesDir: "dist/db/entity/**/*.js",
+    migrationsDir: 'src/db/migrations/**/*.ts',
+    entitiesDir: 'dist/db/entities/**/*.js',
   },
 };
 

@@ -5,5 +5,5 @@ export const getIndex = (req: Request, res: Response, next: NextFunction) => {
 };
 
 export default {
-  getIndex
+  getIndex,
 };
